@@ -359,6 +359,7 @@ class ThermodynamicPackage:
         print("-" * 80)
 
 
+
 class ShortcutDistillation:
     """
     Méthodes simplifiées de dimensionnement (Fenske, Underwood, Gilliland, Kirkbride)

@@ -19,7 +19,7 @@ from visualization import DistillationVisualizer, print_design_summary
 
 def exemple_btx_complet():
     """
-    Exemple complet: Séparation BTX
+    Exemple complet: Séparation BTX 
     """
     print("\n" + "╔" + "═" * 78 + "╗")
     print("║" + "DISTILLATION MULTICOMPOSANTS - SYSTÈME BTX".center(78) + "║")

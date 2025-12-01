@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-slate-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+            Dimensionnez Votre Colonne
+        </h1>
+        <p class="mt-5 max-w-xl mx-auto text-xl text-slate-500">
+            Conception avancée de distillation multicomposants pour les systèmes Benzène-Toluène-Xylène.
+        </p>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-slate-100">
+        <div class="p-8">
+            <form action="/calculate" method="POST" class="space-y-8">
+
+                <!-- Section 1: Feed Definition -->
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-slate-900 border-b pb-2 mb-4">
+                        1. Définition de l'Alimentation
+                    </h3>
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-3">
+                            <label for="feed_flow" class="block text-sm font-medium text-slate-700">Débit d'Alimentation
+                                (F)</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="number" name="feed_flow" id="feed_flow" value="100" step="0.1"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-slate-300 rounded-md"
+                                    placeholder="100">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-slate-500 sm:text-sm">kmol/h</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label class="block text-sm font-medium text-slate-700">Composition (Fractions
+                                Molaires)</label>
+                            <div class="grid grid-cols-3 gap-2 mt-1">
+                                <div>
+                                    <input type="number" name="z_benzene" value="0.333" step="0.001"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-slate-300 rounded-md"
+                                        placeholder="Benzène">
+                                    <p class="mt-1 text-xs text-slate-500 text-center">Benzène</p>
+                                </div>
+                                <div>
+                                    <input type="number" name="z_toluene" value="0.333" step="0.001"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-slate-300 rounded-md"
+                                        placeholder="Toluène">
+                                    <p class="mt-1 text-xs text-slate-500 text-center">Toluène</p>
+                                </div>
+                                <div>
+                                    <input type="number" name="z_xylene" value="0.334" step="0.001"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-slate-300 rounded-md"
+                                        placeholder="o-Xylène">
+                                    <p class="mt-1 text-xs text-slate-500 text-center">o-Xylène</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Operating Conditions -->
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-slate-900 border-b pb-2 mb-4">
+                        2. Conditions Opératoires
+                    </h3>
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-3">
+                            <label for="pressure" class="block text-sm font-medium text-slate-700">Pression de la
+                                Colonne (P)</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="number" name="pressure" id="pressure" value="101325" step="100"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-slate-300 rounded-md">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-slate-500 sm:text-sm">Pa</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label for="quality" class="block text-sm font-medium text-slate-700">Qualité de
+                                l'Alimentation (q)</label>
+                            <input type="number" name="quality" id="quality" value="1.0" step="0.1"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-slate-300 rounded-md">
+                            <p class="mt-1 text-xs text-slate-500">1.0 = Liquide Saturé, 0.0 = Vapeur Saturée</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Design Specs -->
+                <div>
+                    <h3 class="text-lg leading-6 font-medium text-slate-900 border-b pb-2 mb-4">
+                        3. Spécifications de Conception
+                    </h3>
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-3">
+                            <label for="recovery_lk" class="block text-sm font-medium text-slate-700">Récupération LK
+                                (Distillat)</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="number" name="recovery_lk" id="recovery_lk" value="0.95" step="0.01"
+                                    max="1.0"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-slate-300 rounded-md">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-slate-500 sm:text-sm">Frac</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label for="recovery_hk" class="block text-sm font-medium text-slate-700">Récupération HK
+                                (Résidu)</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="number" name="recovery_hk" id="recovery_hk" value="0.95" step="0.01"
+                                    max="1.0"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-slate-300 rounded-md">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-slate-500 sm:text-sm">Frac</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label for="r_factor" class="block text-sm font-medium text-slate-700">Facteur de Reflux
+                                (R/Rmin)</label>
+                            <input type="number" name="r_factor" id="r_factor" value="1.3" step="0.1" min="1.0"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-slate-300 rounded-md">
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label for="efficiency" class="block text-sm font-medium text-slate-700">Efficacité des
+                                Plateaux</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <input type="number" name="efficiency" id="efficiency" value="0.70" step="0.05"
+                                    max="1.0"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-3 pr-12 sm:text-sm border-slate-300 rounded-md">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <span class="text-slate-500 sm:text-sm">Frac</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-5">
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="ml-3 inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:-translate-y-0.5">
+                            Lancer la Simulation
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="md:flex md:items-center md:justify-between mb-8">
+        <div class="flex-1 min-w-0">
+            <h2 class="text-2xl font-bold leading-7 text-slate-900 sm:text-3xl sm:truncate">
+                Résultats de Simulation
+            </h2>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4">
+            <a href="/"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Nouvelle Conception
+            </a>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+        <!-- Card 1 -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-slate-500 truncate">Total Plateaux (Réel)</dt>
+                <dd class="mt-1 text-3xl font-semibold text-slate-900">{{ results.N_real }}</dd>
+                <dd class="mt-1 text-sm text-green-600">Efficacité: {{ (results.efficiency * 100)|round(1) }}%</dd>
+            </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-slate-500 truncate">Plateau Alimentation</dt>
+                <dd class="mt-1 text-3xl font-semibold text-slate-900">{{ results.feed_stage }}</dd>
+                <dd class="mt-1 text-sm text-slate-500">Rect: {{ results.N_R }} | Épuis: {{ results.N_S }}</dd>
+            </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-slate-500 truncate">Taux de Reflux (R)</dt>
+                <dd class="mt-1 text-3xl font-semibold text-slate-900">{{ results.R|round(2) }}</dd>
+                <dd class="mt-1 text-sm text-slate-500">Min: {{ results.R_min|round(3) }}</dd>
+            </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-slate-500 truncate">Débit Distillat (D)</dt>
+                <dd class="mt-1 text-3xl font-semibold text-slate-900">{{ results.D|round(1) }}</dd>
+                <dd class="mt-1 text-sm text-slate-500">kmol/h</dd>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Chart 1 -->
+        <div class="bg-white shadow rounded-lg p-4">
+            <div id="chart-0" class="w-full h-96"></div>
+        </div>
+        <!-- Chart 2 -->
+        <div class="bg-white shadow rounded-lg p-4">
+            <div id="chart-1" class="w-full h-96"></div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Chart 3 -->
+        <div class="bg-white shadow rounded-lg p-4">
+            <div id="chart-2" class="w-full h-96"></div>
+        </div>
+
+        <!-- Summary Table -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="px-4 py-5 sm:px-6 border-b border-slate-200">
+                <h3 class="text-lg leading-6 font-medium text-slate-900">Résumé des Flux</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                Composé</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                Distillat (x_D)</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                Résidu (x_B)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-200">
+                        {% for name in compound_names %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900 capitalize">{{
+                                name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-slate-500">{{
+                                (results.x_D[loop.index0] * 100)|round(2) }}%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-slate-500">{{
+                                (results.x_B[loop.index0] * 100)|round(2) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Render Plotly Charts
+    const graphs = {{ graphs | safe }};
+
+    graphs.forEach((graph, index) => {
+        const parsed = JSON.parse(graph);
+        Plotly.newPlot(`chart-${index}`, parsed.data, parsed.layout, { responsive: true });
+    });
+</script>
+{% endblock %}
